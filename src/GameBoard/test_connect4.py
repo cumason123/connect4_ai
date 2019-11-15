@@ -34,7 +34,8 @@ def test_board_won_horizontal_or_vertical():
             b.clear()
 
     won, player = b.winner_exists()
-    assert(not won and player == -1)
+    assert(not won and player == 0)
+
 
 def test_board_diagonal_wins():
     print('Beginning Test for diagonal wins')
@@ -54,7 +55,8 @@ def test_board_diagonal_wins():
                 assert(won and player == 1)
                 b.clear()
     won, player = b.winner_exists()
-    assert(not won and player == -1)
+    assert(not won and player == 0)
+
 
 def test_is_full():
     print('Testing whether the board is full works')

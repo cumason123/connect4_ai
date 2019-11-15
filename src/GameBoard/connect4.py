@@ -62,7 +62,7 @@ class Board():
             print('Found Diagonal Win')
             return won, player
 
-        return False, -1
+        return False, 0
 
 
     def clear(self):
@@ -90,7 +90,7 @@ class Board():
                     continue
                 elif row[i] == row[i+1] == row[i+2] == row[i+3] != 0:
                     return True, row[i]
-        return False, -1
+        return False, 0
 
 
     def won_vertical(self) -> Tuple[bool, int]:
@@ -138,7 +138,7 @@ class Board():
                     if self.board[x][y] == self.board[x-1][y-1] == \
                         self.board[x-2][y-2] == self.board[x-3][y-3] != 0:
                         return True, self.board[x][y]
-        return False, -1
+        return False, 0
 
 
     def is_full(self) -> bool:
