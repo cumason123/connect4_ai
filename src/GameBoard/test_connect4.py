@@ -57,8 +57,9 @@ def test_board_diagonal_wins():
     assert(not won and player == -1)
 
 def test_is_full():
-    print('Testing whether the board is full')
+    print('Testing whether the board is full works')
     b = Board(*STANDARD_CONNECT_FOUR_SIZE)
     for x in range(b.shape()[0]):
         for y in range(b.shape()[1]):
             b.apply_action(y, 1)
+    assert(b.is_full())

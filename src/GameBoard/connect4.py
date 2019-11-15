@@ -31,8 +31,6 @@ class Board():
         player : int
             player id of the token
         """
-        print(action)
-        print(self)
         assert(action < self.action_space and self.board[-1][action] == 0)
         for row in range(self.shape()[0]):
             if self.board[row][action] == 0:
