@@ -3,6 +3,7 @@ def test_board_shape():
 	print('Beginning Test for Board Shape')
 	# Tests shape of board is true
 	b = Board(*STANDARD_CONNECT_FOUR_SIZE)
+
 	# Test board shape
 	print('Board Shape Should be {0}, found: {1}'.format(STANDARD_CONNECT_FOUR_SIZE, b.shape()))
 	assert(b.shape() == STANDARD_CONNECT_FOUR_SIZE)
@@ -22,17 +23,36 @@ def test_board_won_horizontal_or_vertical():
 			# Vertical Test
 			if i <= len(b.board) - 4:
 				b.board[i][col] = b.board[i+1][col] = b.board[i+2][col] = b.board[i+3][col] = 1
-				won, player = b.won_vertical()
-				print("Expect to find (True, 1), found: {0}".format((won, player)))
+				won, player = b.winner_exists()
 				assert(won and player == 1)
 				b.clear()
 
 			# Horizontal Test
 			b.board[i][col] = b.board[i][col + 1] = b.board[i][col + 2] = b.board[i][col + 3] = 1
-			won, player = b.won_horizontal()
-			print("Expect to find (True, 1), found: {0}".format((won, player)))
+			won, player = b.winner_exists()
 			assert(won and player == 1)
 			b.clear()
 
-	won, player = b.won_vertical()
+	won, player = b.winner_exists()
 	assert(not won and player == -1)
+
+def test_board_diagonal_wins():
+	print('Beginning Test for diagonal wins')
+	b = Board(*STANDARD_CONNECT_FOUR_SIZE)
+	for x in range(b.shape()[0]):
+		for y in range(b.shape()[1]):
+		
+			if (x+3 < b.shape()[0] and y+3 < b.shape()[1]):
+				b.board[x][y] = b.board[x+1][y+1] = b.board[x+2][y+2] = b.board[x+3][y+3] = 1
+				won, player = b.winner_exists()
+				assert(won and player == 1)
+				b.clear()
+
+			if (x-3 >= 0 and y-3 >= 0):
+				b.board[x][y] = b.board[x-1][y-1] = b.board[x-2][y-2] = b.board[x-3][y-3] = 1
+				won, player = b.winner_exists()
+				assert(won and player == 1)
+				b.clear()
+	won, player = b.winner_exists()
+	assert(not won and player == -1)
+
