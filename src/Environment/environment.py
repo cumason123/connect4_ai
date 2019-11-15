@@ -61,3 +61,6 @@ class Env():
         """
         if action < self.connect4.action_space and self.connect4.board[-1][action] == 0:
             return True
+
+    def __str__(self):
+        return str(self.connect4)

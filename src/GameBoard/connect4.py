@@ -31,10 +31,13 @@ class Board():
         player : int
             player id of the token
         """
-        assert(action < self.action_space and self.board[-1][action] == 0)
+        assert(action < self.action_space and self.board[-1][action] == 0 and player != 0)
         for row in range(self.shape()[0]):
             if self.board[row][action] == 0:
+                print("Received player", player)
                 self.board[row][action] = player
+                print(self)
+
                 return
 
     def winner_exists(self) -> Tuple[bool, int]:
@@ -69,7 +72,7 @@ class Board():
         """
         Removes all tokens frmo the board
         """
-        self.board = np.zeros(self.board.shape)
+        self.board = np.zeros(self.board.shape).astype(int)
         self.action_space = self.board.shape[1]
 
 
@@ -134,9 +137,9 @@ class Board():
                     if self.board[x][y] == self.board[x+1][y+1] == \
                         self.board[x+2][y+2] == self.board[x+3][y+3] != 0:
                         return True, self.board[x][y]
-                if (x-3 >= 0 and y-3 >= 0):
-                    if self.board[x][y] == self.board[x-1][y-1] == \
-                        self.board[x-2][y-2] == self.board[x-3][y-3] != 0:
+                if (x+3 < self.shape()[0] and y-3 >= 0):
+                    if self.board[x][y] == self.board[x+1][y-1] == \
+                        self.board[x+2][y-2] == self.board[x+3][y-3] != 0:
                         return True, self.board[x][y]
         return False, 0
 
@@ -159,7 +162,7 @@ class Board():
         """Returns grid as string form"""
         s = '-'*(len(self.board[0])*4) + '\n'
         s += '| '
-        for row in self.board:
+        for row in self.board[::-1]:
             for col in row:
                 s += str(col) + ' | '
             s = s[:-3]

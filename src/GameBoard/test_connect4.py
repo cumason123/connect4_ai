@@ -49,8 +49,8 @@ def test_board_diagonal_wins():
                 assert(won and player == 1)
                 b.clear()
 
-            if (x-3 >= 0 and y-3 >= 0):
-                b.board[x][y] = b.board[x-1][y-1] = b.board[x-2][y-2] = b.board[x-3][y-3] = 1
+            if (x+3 < b.shape()[0] and y-3 >= 0):
+                b.board[x][y] = b.board[x+1][y-1] = b.board[x+2][y-2] = b.board[x+3][y-3] = 1
                 won, player = b.winner_exists()
                 assert(won and player == 1)
                 b.clear()
