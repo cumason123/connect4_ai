@@ -1,17 +1,45 @@
 import numpy as np
+from typing import Dict, Tuple, Sequence
+
 STANDARD_CONNECT_FOUR_SIZE = (6, 7)
 class Board():
-	def __init__(self, num_rows, num_cols):
-		self.board = np.zeros([num_rows, num_cols])
+	def __init__(self, num_rows: int, num_cols: int):
+		assert(num_rows > 4 and num_cols > 4)
+		self.board = np.zeros([num_rows, num_cols]).astype(int)
 		self.action_space = num_cols
 
 
-	def shape(self):
-		# Returns shape of board
+	def shape(self) -> Tuple[int, int]:
+		"""
+		Returns current shape of board
+
+		Returns
+		----------
+		(num_rows : int, num_cols : int)
+		"""
 		return self.board.shape
 
 
-	def winner_exists(self):
+	def apply_action(self, action: int, player: int):
+		"""
+		Puts player token in a column.
+
+		Parameters
+		----------
+		action : int
+			action specifying which column to place token in
+		player : int
+			player id of the token
+		"""
+		print(action)
+		print(self)
+		assert(action < self.action_space and self.board[-1][action] == 0)
+		for row in range(self.shape()[0]):
+			if self.board[row][action] == 0:
+				self.board[row][action] = player
+				return
+
+	def winner_exists(self) -> Tuple[bool, int]:
 		"""
 		Checks to see if a player has won. If no players have won, return false and -1
 
@@ -47,7 +75,7 @@ class Board():
 		self.action_space = self.board.shape[1]
 
 
-	def won_horizontal(self):
+	def won_horizontal(self) -> Tuple[bool, int]:
 		"""
 		Checks every 4 horizontal consecutive slots to see if someone occupies them. If someone
 		does, we will return True and that player.
@@ -67,7 +95,7 @@ class Board():
 		return False, -1
 
 
-	def won_vertical(self):
+	def won_vertical(self) -> Tuple[bool, int]:
 		"""
 		Checks every 4 vertical consecutive slots to see if someone occupies them. If someone
 		does, we will return True and that player.
@@ -90,7 +118,17 @@ class Board():
 			self.board = self.board.T
 
 
-	def won_diagonal(self):
+	def won_diagonal(self) -> Tuple[bool, int]:
+		"""
+		Checks every 4 diagonal consecutive slots to see if someone occupies them. If someone
+		does, we will return True and that player.
+
+		Returns
+		----------
+		(bool, int)
+			returns a tuple where first element is true if someone won and second element
+			specifies which player won
+		"""
 		for x in range(self.shape()[0]):
 			for y in range(self.shape()[1]):
 			
@@ -103,3 +141,30 @@ class Board():
 						self.board[x-2][y-2] == self.board[x-3][y-3] != 0:
 						return True, self.board[x][y]
 		return False, -1
+
+
+	def is_full(self) -> bool:
+		"""
+		Returns whether connect four board is full
+
+		Returns
+		----------
+		bool
+		"""
+		for row in self.board:
+			for col in row:
+				if col == 0:
+					return False
+		return True
+
+	def __str__(self):
+		"""Returns grid as string form"""
+		s = '-'*(len(self.board[0])*4) + '\n'
+		s += '| '
+		for row in self.board:
+			for col in row:
+				s += str(col) + ' | '
+			s = s[:-3]
+			s += '\n'
+			s += '-'*len(row)*4 + '\n| '
+		return s[:-2]

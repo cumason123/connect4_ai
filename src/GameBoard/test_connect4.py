@@ -1,4 +1,4 @@
-from GameBoards.connect4 import Board, STANDARD_CONNECT_FOUR_SIZE
+from GameBoard.connect4 import Board, STANDARD_CONNECT_FOUR_SIZE
 def test_board_shape():
 	print('Beginning Test for Board Shape')
 	# Tests shape of board is true
@@ -56,3 +56,9 @@ def test_board_diagonal_wins():
 	won, player = b.winner_exists()
 	assert(not won and player == -1)
 
+def test_is_full():
+	print('Testing whether the board is full')
+	b = Board(*STANDARD_CONNECT_FOUR_SIZE)
+	for x in range(b.shape()[0]):
+		for y in range(b.shape()[1]):
+			b.apply_action(y, 1)
