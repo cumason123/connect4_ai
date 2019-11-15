@@ -18,7 +18,8 @@ def test_simple_win():
 	env.reset()
 	assert(env.winner == 0)
 
-def test_diagonal_win():
+
+def test_diagonal_step_win():
 	player = 1
 	action = 0
 	env = Env()
@@ -41,3 +42,13 @@ def test_diagonal_win():
 	won, reward = env.step(3, player)
 	assert(won and env.winner == player and reward == 100)
 
+
+def test_valid_actions():
+	player = 1
+	action = 0
+	env = Env()
+	for i in range(6):
+		won, reward = env.step(0, player)
+		player = 2 if player == 1 else 1
+		assert(not won and reward == -1)
+	assert(not env.action_is_valid(0))
