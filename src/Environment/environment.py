@@ -27,11 +27,11 @@ class Env():
 
         Returns
         ----------
-        False, None
+        2D array, False, None
             will return this if you gave an invalid action
-        False, reward: int
+        2D array, False, reward: int
             will return this if episode did not end yet
-        True, reward: int
+        2D array, True, reward: int
             will return this if episode ended
 
         """
@@ -49,7 +49,7 @@ class Env():
         if won:
             reward = 100 if player == which_player else -100
             self.winner = which_player
-        return won, reward
+        return self.connect4, reward, won
 
     def action_is_valid(self, action: int) -> bool:
         """
