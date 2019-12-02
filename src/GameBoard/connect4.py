@@ -160,6 +160,7 @@ class Board():
 
     def __str__(self):
         """Returns grid as string form"""
+        actions = range(self.action_space)
         s = '-'*(len(self.board[0])*4) + '\n'
         s += '| '
         for row in self.board[::-1]:
@@ -168,4 +169,7 @@ class Board():
             s = s[:-3]
             s += '\n'
             s += '-'*len(row)*4 + '\n| '
-        return s[:-2]
+        s = s[:-2] + '-'*(len(self.board[0])*4) + '\n| '
+        for action in actions:
+            s += str(action) + ' | '
+        return s[:-2] + '\n'

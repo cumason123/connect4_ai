@@ -4,6 +4,9 @@ class Env():
     def __init__(self):
         self.connect4 = Board(*STANDARD_CONNECT_FOUR_SIZE)
         self.winner = 0
+        self.observation_space = self.connect4.board.shape[0]
+        self.action_space = self.connect4.board.shape[1]
+        self.actions = []
 
 
     def reset(self):
@@ -14,6 +17,18 @@ class Env():
         self.winner = 0
 
 
+    def undo(self):
+        if self.actions == []:
+            return False
+        elif self.winner != 0:
+            self.winner = 0
+        row, col = self.actions.pop()
+        self.connect4[row][col] = 0
+        return True
+
+    def valid_actions(self):
+        return [action for action in range(self.action_space) if self.action_is_valid(action)]
+        
     def step(self, action: int, player: int):
         """
         Agent takes action in environment only if action is takeable.
@@ -27,29 +42,24 @@ class Env():
 
         Returns
         ----------
-        2D array, False, None
-            will return this if you gave an invalid action
-        2D array, False, reward: int
-            will return this if episode did not end yet
-        2D array, True, reward: int
-            will return this if episode ended
+        state, reward, done
 
         """
         if self.winner != 0:
-            return True, 100 if player == self.winner else -100
+            return self.connect4, 100 if player == self.winner else -100, True
+        if self.tie():
+            return self.connect4, 0, True
 
-        valid = self.action_is_valid(action)
-        if not valid:
-            return False, None
+        assert(self.action_is_valid(action))
         self.connect4.apply_action(action, player)
 
-        won, which_player = self.connect4.winner_exists()
-        reward = -1
+        finished, which_player = self.connect4.winner_exists()
+        self.winner = which_player
 
-        if won:
-            reward = 100 if player == which_player else -100
-            self.winner = which_player
-        return self.connect4, reward, won
+        if finished:
+            return self.connect4, 100 if player == self.winner else -100, finished
+
+        return self.connect4, -1, finished
 
     def action_is_valid(self, action: int) -> bool:
         """
@@ -61,6 +71,9 @@ class Env():
         """
         if action < self.connect4.action_space and self.connect4.board[-1][action] == 0:
             return True
+
+    def tie(self) -> bool:
+        return not self.connect4.winner_exists() and self.connect4.is_full()
 
     def __str__(self):
         return str(self.connect4)

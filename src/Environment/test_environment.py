@@ -13,7 +13,8 @@ def test_simple_win():
 		assert(not won and reward == -1)
 
 	state, reward, won = env.step(action, player)
-	assert(won and reward == 100 and env.winner == player)
+	assert(won and reward == 100 and env.winner == player and \
+		state.shape() == (env.observation_space,env.action_space))
 
 	env.reset()
 	assert(env.winner == 0)
