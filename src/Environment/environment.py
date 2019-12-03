@@ -28,8 +28,8 @@ class Env():
 
     def valid_actions(self):
         return [action for action in range(self.action_space) if self.action_is_valid(action)]
-        
-    def step(self, action: int, player: int):
+
+    def step(self, action: int, player: int, train=False):
         """
         Agent takes action in environment only if action is takeable.
 
@@ -51,7 +51,7 @@ class Env():
             return self.connect4, 0, True
 
         assert(self.action_is_valid(action))
-        self.connect4.apply_action(action, player)
+        self.connect4.apply_action(action, player, train=train)
 
         finished, which_player = self.connect4.winner_exists()
         self.winner = which_player

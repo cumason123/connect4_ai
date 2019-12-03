@@ -20,7 +20,7 @@ class Board():
         return self.board.shape
 
 
-    def apply_action(self, action: int, player: int):
+    def apply_action(self, action: int, player: int, train=False):
         """
         Puts player token in a column.
 
@@ -30,13 +30,17 @@ class Board():
             action specifying which column to place token in
         player : int
             player id of the token
+        train : bool
+            bool indicating whether to print boards after each call
         """
         assert(action < self.action_space and self.board[-1][action] == 0 and player != 0)
         for row in range(self.shape()[0]):
             if self.board[row][action] == 0:
-                print("Received player", player)
+                if not train:
+                    print("Received player", player)
                 self.board[row][action] = player
-                print(self)
+                if not train:
+                    print(self)
 
                 return
 
