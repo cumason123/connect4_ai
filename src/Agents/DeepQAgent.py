@@ -30,6 +30,10 @@ class DQA(GenericAgent):
         self.optimizer = optim.Adam(self.model.parameters(), lr=0.01)
 
     def policy(self, x, train=True):
+        if len(self.env.valid_actions()) == 0:
+            print(self.env)
+        assert(len(self.env.valid_actions()) > 0)
+
         action = None
         xhat = np.concatenate((x, [self.player]))
         xhat = torch.Tensor(xhat)
@@ -39,11 +43,10 @@ class DQA(GenericAgent):
         
         if train and np.random.uniform() < self.epsilon:
             # epsilon greedy
-            action = np.random.choice(self.env.valid_actions)
+            action = np.random.choice(self.env.valid_actions())
             expectation = reward_expectations[action]
         else:
             # policy
-            assert(len(self.env.valid_actions()) > 0)
             heap = reward_expectations.copy()
             heapq.heapify(heap)
 
@@ -62,13 +65,12 @@ class DQA(GenericAgent):
 
         # Q(s,a) = Q(s,a) + a(r + gamma Q(s+1,a*) - Q(s,a))
         action, expectation = self.policy(state, train=train)
-        new_state, reward, done = self.env.step(action, self.player)
+        new_state, reward, done = self.env.step(action, self.player, train=train)
         new_state_modified = torch.Tensor(np.concatenate((new_state.board.flatten(), [self.player])))
         new_expectation = expectation + self.alpha * (reward + self.gamma * \
             max(self.model(new_state_modified)) - expectation)
-        # new_expectation = torch.Tensor([new_expectation])
 
-        print('Expectation: {0}, new expectation: {1}, {2}'.format(expectation, new_expectation, type(expectation)))
+        # print('Expectation: {0}, new expectation: {1}, {2}'.format(expectation, new_expectation, type(expectation)))
 
         loss = self.lossfunc(expectation, new_expectation)
         loss.backward()
