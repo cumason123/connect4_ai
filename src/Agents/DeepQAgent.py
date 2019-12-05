@@ -13,8 +13,8 @@ class Model(nn.Module):
         self.dense1 = nn.Linear(feature_space, feature_space * 4)
         self.dense2 = nn.Linear(feature_space * 4, feature_space * 4)
         self.output = nn.Linear(feature_space * 4, action_space)
-        device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-        self.to(device)
+        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        self.to(self.device)
 
     def forward(self, x):
         h1 = F.relu(self.dense1(x))
@@ -38,7 +38,7 @@ class DQA(GenericAgent):
 
         action = None
         xhat = np.concatenate((x, [self.player]))
-        xhat = torch.Tensor(xhat)
+        xhat = torch.Tensor(xhat).to(self.device)
         bellman_expectations = self.model(xhat)
         reward_expectations = bellman_expectations.tolist()
 
@@ -61,14 +61,14 @@ class DQA(GenericAgent):
 
     def step(self, state, train=True):
         if type(state) == connect4:
-            state = torch.Tensor(state.board.flatten())
+            state = torch.Tensor(state.board.flatten()).to(self.device)
         assert(len(state.shape) == 1)
         self.optimizer.zero_grad()
 
         # Q(s,a) = Q(s,a) + a(r + gamma Q(s+1,a*) - Q(s,a))
         action, expectation = self.policy(state, train=train)
         new_state, reward, done = self.env.step(action, self.player, train=train)
-        new_state_modified = torch.Tensor(np.concatenate((new_state.board.flatten(), [self.player])))
+        new_state_modified = torch.Tensor(np.concatenate((new_state.board.flatten(), [self.player]))).to(self.device)
         new_expectation = expectation + self.alpha * (reward + self.gamma * \
             max(self.model(new_state_modified)) - expectation)
 
