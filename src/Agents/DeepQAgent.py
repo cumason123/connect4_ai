@@ -33,6 +33,11 @@ class DQA(GenericAgent):
     def policy(self, x, train=True):
         if len(self.env.valid_actions()) == 0:
             print(self.env)
+            print('Read below debugs')
+            print('Tie: ', self.env.tie(train=train))
+            print('Winner? ', self.env.connect4.winner_exists(train=train))
+            print(self.env)
+            print(self.env.valid_actions())
         assert(len(self.env.valid_actions()) > 0)
 
         action = None
@@ -68,6 +73,7 @@ class DQA(GenericAgent):
         # Q(s,a) = Q(s,a) + a(r + gamma Q(s+1,a*) - Q(s,a))
         action, expectation = self.policy(state, train=train)
         new_state, reward, done = self.env.step(action, self.player, train=train)
+
         new_state_modified = torch.Tensor(np.concatenate((new_state.board.flatten(), [self.player]))).to(self.device)
         new_expectation = expectation + self.alpha * (reward + self.gamma * \
             max(self.model(new_state_modified)) - expectation)

@@ -54,9 +54,9 @@ class Env():
         self.connect4.apply_action(action, player, train=train)
 
         finished, which_player = self.connect4.winner_exists(train=train)
-        self.winner = which_player
 
         if finished:
+            self.winner = which_player
             return self.connect4, 100 if player == self.winner else -100, finished
 
         return self.connect4, -1, finished
@@ -71,6 +71,7 @@ class Env():
         """
         if action < self.connect4.action_space and self.connect4.board[-1][action] == 0:
             return True
+        return False
 
     def tie(self, train=False) -> bool:
         return not self.connect4.winner_exists(train=train) and self.connect4.is_full()
