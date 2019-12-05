@@ -13,9 +13,6 @@ class Model(nn.Module):
         self.dense1 = nn.Linear(feature_space, feature_space * 4)
         self.dense2 = nn.Linear(feature_space * 4, feature_space * 4)
         self.output = nn.Linear(feature_space * 4, action_space)
-        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-        print(self.device)
-        self.to(self.device)
 
     def forward(self, x):
         h1 = F.relu(self.dense1(x))
@@ -28,8 +25,8 @@ class DQA(GenericAgent):
         self.alpha = alpha
         self.gamma = gamma
         self.epsilon = epsilon
-        self.model = Model(self.env.action_space, env.observation_space)
-        self.device = self.model.device
+        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        self.model = Model(self.env.action_space, env.observation_space).to(self.device)
         self.lossfunc = nn.MSELoss()
         self.optimizer = optim.Adam(self.model.parameters(), lr=0.01)
 
@@ -40,6 +37,7 @@ class DQA(GenericAgent):
 
         action = None
         xhat = np.concatenate((x, [self.player]))
+
         xhat = torch.Tensor(xhat).to(self.device)
         bellman_expectations = self.model(xhat)
         reward_expectations = bellman_expectations.tolist()
@@ -63,7 +61,7 @@ class DQA(GenericAgent):
 
     def step(self, state, train=True):
         if type(state) == connect4:
-            state = torch.Tensor(state.board.flatten()).to(self.device)
+            state = torch.Tensor(state.board.flatten())
         assert(len(state.shape) == 1)
         self.optimizer.zero_grad()
 
