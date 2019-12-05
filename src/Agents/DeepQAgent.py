@@ -13,6 +13,8 @@ class Model(nn.Module):
         self.dense1 = nn.Linear(feature_space, feature_space * 4)
         self.dense2 = nn.Linear(feature_space * 4, feature_space * 4)
         self.output = nn.Linear(feature_space * 4, action_space)
+        device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        self.to(device)
 
     def forward(self, x):
         h1 = F.relu(self.dense1(x))
