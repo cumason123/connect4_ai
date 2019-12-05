@@ -53,7 +53,7 @@ class Env():
         assert(self.action_is_valid(action))
         self.connect4.apply_action(action, player, train=train)
 
-        finished, which_player = self.connect4.winner_exists()
+        finished, which_player = self.connect4.winner_exists(train=train)
         self.winner = which_player
 
         if finished:

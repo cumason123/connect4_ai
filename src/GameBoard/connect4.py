@@ -44,7 +44,7 @@ class Board():
 
                 return
 
-    def winner_exists(self) -> Tuple[bool, int]:
+    def winner_exists(self, train=False) -> Tuple[bool, int]:
         """
         Checks to see if a player has won. If no players have won, return false and -1
 
@@ -56,17 +56,20 @@ class Board():
         """
         won, player = self.won_horizontal()
         if won:
-            print('Found Horizontal Win')
+            if not train:
+                print('Found Horizontal Win')
             return won, player
 
         won, player = self.won_vertical()
         if won:
-            print('Found Vertical Win')
+            if not train:
+                print('Found Vertical Win')
             return won, player
 
         won, player = self.won_diagonal()
         if won:
-            print('Found Diagonal Win')
+            if not train:
+                print('Found Diagonal Win')
             return won, player
 
         return False, 0
