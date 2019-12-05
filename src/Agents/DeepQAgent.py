@@ -14,6 +14,7 @@ class Model(nn.Module):
         self.dense2 = nn.Linear(feature_space * 4, feature_space * 4)
         self.output = nn.Linear(feature_space * 4, action_space)
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        print(self.device)
         self.to(self.device)
 
     def forward(self, x):
@@ -28,6 +29,7 @@ class DQA(GenericAgent):
         self.gamma = gamma
         self.epsilon = epsilon
         self.model = Model(self.env.action_space, env.observation_space)
+        self.device = self.model.device
         self.lossfunc = nn.MSELoss()
         self.optimizer = optim.Adam(self.model.parameters(), lr=0.01)
 
