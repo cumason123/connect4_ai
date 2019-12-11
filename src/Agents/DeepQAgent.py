@@ -20,7 +20,7 @@ class Model(nn.Module):
         return self.output(h2)
     
 class DQA(GenericAgent):
-    def __init__(self, env, player, alpha=0.01, gamma=0.99, epsilon=0.1):
+    def __init__(self, env, player, alpha=0.01, gamma=0.99, epsilon=0.05):
         super().__init__(env, player)
         self.alpha = alpha
         self.gamma = gamma
@@ -28,7 +28,7 @@ class DQA(GenericAgent):
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         self.model = Model(self.env.action_space, env.observation_space).to(self.device)
         self.lossfunc = nn.MSELoss()
-        self.optimizer = optim.Adam(self.model.parameters(), lr=0.01)
+        self.optimizer = optim.Adam(self.model.parameters(), lr=alpha)
 
     def policy(self, x, train=True):
         # if len(self.env.valid_actions()) == 0:
