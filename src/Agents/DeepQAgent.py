@@ -61,7 +61,10 @@ class DQA(GenericAgent):
 
             action = float('inf')
             while not self.env.action_is_valid(action):
-                expectation = heap.pop()
+                if len(heap) == 0:
+                    expectation = max(reward_expectations)
+                else:
+                    expectation = heap.pop()
                 action = reward_expectations.index(expectation)
         # bellman_expectations[action].requires_grad = True
         return action, bellman_expectations[action]
