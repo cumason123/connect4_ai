@@ -52,7 +52,11 @@ class DQA(GenericAgent):
         
         if train and np.random.uniform() < self.epsilon:
             # epsilon greedy
-            action = np.random.choice(self.env.valid_actions())
+            acts = self.env.valid_actions()
+            if acts == []:
+                action = np.random.choice(range(self.env.action_space))
+            else:
+                action = np.random.choice(self.env.valid_actions())
             expectation = reward_expectations[action]
         else:
             # policy
