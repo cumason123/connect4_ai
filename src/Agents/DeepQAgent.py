@@ -10,9 +10,9 @@ class Model(nn.Module):
     def __init__(self, action_space, observation_space):
         super().__init__()
         feature_space = action_space * observation_space + 1
-        self.dense1 = nn.Linear(feature_space, feature_space * 4)
-        self.dense2 = nn.Linear(feature_space * 4, feature_space * 4)
-        self.output = nn.Linear(feature_space * 4, action_space)
+        self.dense1 = nn.Linear(feature_space, feature_space * 2)
+        self.dense2 = nn.Linear(feature_space * 2, feature_space * 2)
+        self.output = nn.Linear(feature_space * 2, action_space)
 
     def forward(self, x):
         h1 = F.relu(self.dense1(x))
@@ -28,7 +28,7 @@ class DQA(GenericAgent):
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         self.model = Model(self.env.action_space, env.observation_space).to(self.device)
         self.lossfunc = nn.MSELoss()
-        self.optimizer = optim.Adam(self.model.parameters(), lr=alpha)
+        self.optimizer = optim.Adam(self.model.parameters(), lr=alpha, weight_decay=0.9)
 
     def policy(self, x, train=True):
         # if len(self.env.valid_actions()) == 0:
