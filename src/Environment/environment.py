@@ -46,7 +46,7 @@ class Env():
 
         """
         if self.winner != 0:
-            return self.connect4, 100 if player == self.winner else -100, True
+            return self.connect4, 100 if player == self.winner else -10000, True
         if self.tie(train=train):
             return self.connect4, 0, True
 
@@ -57,7 +57,7 @@ class Env():
 
         if finished:
             self.winner = which_player
-            return self.connect4, 100 if player == self.winner else -100, finished
+            return self.connect4, 100 if player == self.winner else -10000, finished
 
         return self.connect4, -1, finished
 
