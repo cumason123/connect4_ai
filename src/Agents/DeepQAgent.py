@@ -63,6 +63,7 @@ class DQA(GenericAgent):
             while not self.env.action_is_valid(action):
                 if len(heap) == 0:
                     expectation = max(reward_expectations)
+                    break
                 else:
                     expectation = heap.pop()
                 action = reward_expectations.index(expectation)
