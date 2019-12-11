@@ -31,14 +31,16 @@ class DQA(GenericAgent):
         self.optimizer = optim.Adam(self.model.parameters(), lr=0.01)
 
     def policy(self, x, train=True):
-        if len(self.env.valid_actions()) == 0:
-            print(self.env)
-            print('Read below debugs')
-            print('Tie: ', self.env.tie(train=train))
-            print('Winner? ', self.env.connect4.winner_exists(train=train))
-            print(self.env)
-            print(self.env.valid_actions())
-        assert(len(self.env.valid_actions()) > 0)
+        # if len(self.env.valid_actions()) == 0:
+        #     print(self.env)
+        #     print('Read below debugs')
+        #     print('Tie: ', self.env.tie(train=train))
+        #     print('Winner? ', self.env.connect4.winner_exists(train=train))
+        #     print(self.env)
+        #     print(self.env.valid_actions())
+        #     print(self.env.connect4.is_full())
+        #     print(self.env.winner)
+        # assert(len(self.env.valid_actions()) > 0)
 
         action = None
         xhat = np.concatenate((x, [self.player]))
