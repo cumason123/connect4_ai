@@ -75,8 +75,6 @@ class DQA(GenericAgent):
         # Q(s,a) = Q(s,a) + a(r + gamma Q(s+1,a*) - Q(s,a))
         action, expectation = self.policy(state, train=train)
         new_state, reward, done = self.env.step(action, self.player, train=train)
-        if (reward == -100):
-            print('fuck me')
         new_state_modified = torch.Tensor(np.concatenate((new_state.board.flatten(), [self.player]))).to(self.device)
         new_expectation = expectation + self.alpha * (reward + self.gamma * \
             max(self.model(new_state_modified)) - expectation)
