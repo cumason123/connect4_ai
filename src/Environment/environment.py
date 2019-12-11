@@ -49,7 +49,9 @@ class Env():
             return self.connect4, 100 if player == self.winner else -10000, True
         if self.tie(train=train):
             return self.connect4, 0, True
-
+        if not self.action_is_valid(action):
+            print('LOOK')
+            print(self)
         assert(self.action_is_valid(action))
         self.connect4.apply_action(action, player, train=train)
 
@@ -74,6 +76,7 @@ class Env():
         return False
 
     def tie(self, train=False) -> bool:
+        print('tie parts, {0} and {1}'.format(not self.connect4.winner_exists(train=train), self.connect4.is_full()))
         return not self.connect4.winner_exists(train=train) and self.connect4.is_full()
 
     def __str__(self):
